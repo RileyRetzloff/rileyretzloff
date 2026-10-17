@@ -1,0 +1,147 @@
+<main>
+  <div class="mb-8">
+    <h1>Riley Retzloff</h1>
+    <h2 class="text-gray-300">Full-stack web developer</h2>
+    <div
+      class="relative h-40 w-full overflow-hidden rounded-xl outline outline-white sm:h-48 md:h-64 lg:h-72 xl:h-96"
+    >
+      <img
+        [src]="banner"
+        alt="Picture of Riley (me)"
+        class="h-full w-full object-cover object-top"
+      />
+    </div>
+  </div>
+
+  <div class="grid gap-8 lg:grid-cols-3">
+    <div class="lg:col-span-1">
+      <section
+        class="h-container mb-8 rounded-lg border border-neutral-800 bg-neutral-900/50 p-5 backdrop-blur-sm"
+      >
+        <h3 class="border-b border-neutral-700 pb-2">Contact</h3>
+        <div class="space-y-3">
+          <div class="space-y-2">
+            <!-- "@" must be escaped in Angular templates (it starts control-flow blocks) -->
+            <p class="text-base">rirye811&#64;gmail.com</p>
+            <p class="text-base">(828)620-9803</p>
+            <p class="text-base">
+              <a
+                href="https://linkedin.com/in/rileyretzloff"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LinkedIn
+              </a>
+            </p>
+            <p class="text-base">
+              <a
+                href="https://github.com/RileyRetzloff"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="h-container rounded-lg border border-neutral-800 bg-neutral-900/50 p-5 backdrop-blur-sm"
+      >
+        <h3 class="border-b border-neutral-700 pb-2">Technical Proficiencies</h3>
+        <div class="space-y-4">
+          @for (group of proficiencies; track group.label) {
+            <div>
+              <h5>{{ group.label }}</h5>
+              <p class="text-sm text-gray-300">{{ group.items }}</p>
+            </div>
+          }
+        </div>
+      </section>
+    </div>
+
+    <div class="lg:col-span-2">
+      <section
+        class="h-container mb-8 rounded-lg border border-neutral-800 bg-neutral-900/50 p-5 backdrop-blur-sm"
+      >
+        <h3 class="border-b border-neutral-700 pb-2">Experience</h3>
+
+        <div class="space-y-8">
+          @for (job of jobs; track job.title + job.dates) {
+            <div
+              class="relative border-l-2 pl-5"
+              [class.border-amber-600]="job.current"
+              [class.border-neutral-600]="!job.current"
+            >
+              <div
+                class="absolute top-0 -left-2 h-4 w-4 rounded-full"
+                [class.bg-amber-600]="job.current"
+                [class.bg-neutral-600]="!job.current"
+              ></div>
+              <div class="mb-2">
+                <h4>{{ job.title }}</h4>
+                <p class="text-gray-400">{{ job.company }}</p>
+                <p class="text-sm text-gray-500">{{ job.dates }}</p>
+              </div>
+              <ul
+                class="list-inside list-disc space-y-2 text-sm text-gray-300"
+              >
+                @for (bullet of job.bullets; track bullet) {
+                  <li>{{ bullet }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section
+        class="h-container mb-8 rounded-lg border border-neutral-800 bg-neutral-900/50 p-5 backdrop-blur-sm"
+      >
+        <h3 class="border-b border-neutral-700 pb-2">Education</h3>
+        <div>
+          <h4>
+            BSBA Management Information Systems, BSBA Operations &amp; Supply
+            Chain Management
+          </h4>
+          <p class="mb-1 text-sm text-gray-400">Minor in Software Development</p>
+          <p class="mb-3 text-gray-300">
+            University of North Carolina, Charlotte, NC | Class of 2024
+          </p>
+          <ul class="list-inside list-disc space-y-1 text-sm text-gray-300">
+            @for (bullet of educationBullets; track bullet) {
+              <li>{{ bullet }}</li>
+            }
+          </ul>
+        </div>
+      </section>
+
+      <section
+        class="h-container rounded-lg border border-neutral-800 bg-neutral-900/50 p-5 backdrop-blur-sm"
+      >
+        <h3 class="border-b border-neutral-700 pb-2">More about me</h3>
+
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <h4>Soft Skills</h4>
+            <ul class="list-inside list-disc space-y-2 text-sm text-gray-300">
+              @for (skill of softSkills; track skill) {
+                <li>{{ skill }}</li>
+              }
+            </ul>
+          </div>
+
+          <div>
+            <h4>Interests</h4>
+            <p class="text-sm text-gray-300">
+              Mindfulness, health and fitness, reading, technology, indoor
+              plants and gardening, hiking and outdoors, LGBTQ+ pop culture,
+              roller-skating, and all genres of music.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>

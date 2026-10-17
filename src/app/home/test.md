@@ -1,0 +1,5 @@
+1. **everything revolves around fast, reachable, and intuitive access to the keys (and hotkeys/shortcuts) i use to write code**.
+
+2. **the keys/hotkeys i use most often are placed closest to the home row, and vice versa** — *mostly*. the "intuitiveness" of the layout sometimes takes higher priority. for example, it's still a QWERTY layout, and there's still a pinky `⌫` key (on the left).
+
+3. **shortcuts are another priority**. i bind some to hold actions of specific keys, for example holding `S` for `⌃⇧S` (*save all* in my IDE). others i move to specific layers, for example `R` for `⌃⇧H` ("find and replace" in my IDE) in layer 1. others still involve combinations, for example `⎇` + `⇥`/`⇧⇥` to traverse windows, and `⌃` + `⇥`/`⇧⇥` to traverse tabs (`⇧⇥` is a custom key in layer 0, immediately left of `⇥`). on top of all these, i use `Meh` (`⌃⌥⇧`) for Raycast commands. for example, `Meh` + `V` for *clipboard history*, `Meh` + `.` for *emoji & symbols palette*, `Meh` + `1-6` for *resize and move window to top/bottom left/moddle/right sixth*, and `Meh` + `R` for *resize window to 70%*.
