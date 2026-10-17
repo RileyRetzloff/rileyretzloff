@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 interface Proficiency {
   label: string;
-  items: string;
+  items: string[];
 }
 
 interface Job {
@@ -24,29 +24,86 @@ export class About {
   protected readonly proficiencies: Proficiency[] = [
     {
       label: 'Languages',
-      items: 'TypeScript, JavaScript, C#, Python, HTML, CSS (SCSS), SQL, Java',
+      items: [
+        'TypeScript',
+        'Java',
+        'JavaScript',
+        'C#',
+        'Python',
+        'SQL',
+        'PL/SQL',
+        'HTML',
+        'CSS',
+        'SCSS',
+      ],
     },
     {
       label: 'Frontend',
-      items: 'Angular, React, Bootstrap, Tailwind CSS',
+      items: [
+        'Angular',
+        'Angular Signals',
+        'Angular Material',
+        'PrimeNG',
+        'Tailwind CSS',
+        'React',
+        'Bootstrap',
+      ],
     },
     {
-      label: 'Backend',
-      items: '.NET (.NET Core, ASP.NET Core Web API), Flask',
+      label: 'Backend & APIs',
+      items: [
+        'Spring Framework',
+        'ASP.NET Core Web API',
+        '.NET',
+        'Flask',
+        'RESTful API Design & Integration',
+      ],
     },
     {
-      label: 'Databases & ORMs',
-      items:
-        'SQL Server (SSMS), PostgreSQL, Entity Framework Core, LINQ, Flask SQLAlchemy',
+      label: 'Databases & Data Engineering',
+      items: [
+        'Relational Database Design',
+        'Database Administration',
+        'Data Pipelines',
+        'SQL Server',
+        'PostgreSQL',
+        'Entity Framework Core',
+        'LINQ',
+        'SQLAlchemy',
+      ],
     },
     {
-      label: 'Tools & Methods',
-      items:
-        'Git, GitHub, Azure DevOps, Postman, Pytest, RESTful APIs, Agile (Scrum)',
+      label: 'Deployment & Build Tools',
+      items: [
+        'Apache Tomcat',
+        'Maven',
+        'npm',
+        'CI/CD',
+        'Azure DevOps Pipelines',
+        'Azure',
+        'AWS',
+        'Render',
+      ],
     },
     {
-      label: 'Cloud & Deployment',
-      items: 'Render, Azure',
+      label: 'Testing & Debugging',
+      items: ['Postman', 'TestLog', 'Pytest', 'Chrome DevTools'],
+    },
+    {
+      label: 'Collaboration & Delivery',
+      items: [
+        'Git',
+        'GitHub',
+        'Gitea',
+        'ServiceNow',
+        'Azure DevOps Boards',
+        'Agile/Scrum',
+        'Software Development Life Cycle',
+      ],
+    },
+    {
+      label: 'Additional Experience',
+      items: ['Shell Scripting', 'Airflow', 'AI Principles', 'PyTorch'],
     },
   ];
 

@@ -49,13 +49,23 @@
       <section
         class="h-container rounded-lg border border-neutral-800 bg-neutral-900/50 p-5 backdrop-blur-sm"
       >
-        <h3 class="border-b border-neutral-700 pb-2">Technical Proficiencies</h3>
+        <h3 class="border-b border-neutral-700 pb-2">
+          Technical Proficiencies
+        </h3>
         <div class="space-y-4">
           @for (group of proficiencies; track group.label) {
-            <div>
-              <h5>{{ group.label }}</h5>
-              <p class="text-sm text-gray-300">{{ group.items }}</p>
+          <div>
+            <h5>{{ group.label }}</h5>
+            <div class="flex flex-wrap w-full gap-1.5">
+              @for (item of group.items; track $index) {
+              <div
+                class="flex py-1 px-2 bg-zinc-800 text-zinc-200 rounded-md text-sm"
+              >
+                {{item}}
+              </div>
+              }
             </div>
+          </div>
           }
         </div>
       </section>
@@ -69,29 +79,27 @@
 
         <div class="space-y-8">
           @for (job of jobs; track job.title + job.dates) {
+          <div
+            class="relative border-l-2 pl-5"
+            [class.border-amber-600]="job.current"
+            [class.border-neutral-600]="!job.current"
+          >
             <div
-              class="relative border-l-2 pl-5"
-              [class.border-amber-600]="job.current"
-              [class.border-neutral-600]="!job.current"
-            >
-              <div
-                class="absolute top-0 -left-2 h-4 w-4 rounded-full"
-                [class.bg-amber-600]="job.current"
-                [class.bg-neutral-600]="!job.current"
-              ></div>
-              <div class="mb-2">
-                <h4>{{ job.title }}</h4>
-                <p class="text-gray-400">{{ job.company }}</p>
-                <p class="text-sm text-gray-500">{{ job.dates }}</p>
-              </div>
-              <ul
-                class="list-inside list-disc space-y-2 text-sm text-gray-300"
-              >
-                @for (bullet of job.bullets; track bullet) {
-                  <li>{{ bullet }}</li>
-                }
-              </ul>
+              class="absolute top-0 -left-2 h-4 w-4 rounded-full"
+              [class.bg-amber-600]="job.current"
+              [class.bg-neutral-600]="!job.current"
+            ></div>
+            <div class="mb-2">
+              <h4>{{ job.title }}</h4>
+              <p class="text-gray-400">{{ job.company }}</p>
+              <p class="text-sm text-gray-500">{{ job.dates }}</p>
             </div>
+            <ul class="list-inside list-disc space-y-2 text-sm text-gray-300">
+              @for (bullet of job.bullets; track bullet) {
+              <li>{{ bullet }}</li>
+              }
+            </ul>
+          </div>
           }
         </div>
       </section>
@@ -105,13 +113,15 @@
             BSBA Management Information Systems, BSBA Operations &amp; Supply
             Chain Management
           </h4>
-          <p class="mb-1 text-sm text-gray-400">Minor in Software Development</p>
+          <p class="mb-1 text-sm text-gray-400">
+            Minor in Software Development
+          </p>
           <p class="mb-3 text-gray-300">
             University of North Carolina, Charlotte, NC | Class of 2024
           </p>
           <ul class="list-inside list-disc space-y-1 text-sm text-gray-300">
             @for (bullet of educationBullets; track bullet) {
-              <li>{{ bullet }}</li>
+            <li>{{ bullet }}</li>
             }
           </ul>
         </div>
@@ -127,7 +137,7 @@
             <h4>Soft Skills</h4>
             <ul class="list-inside list-disc space-y-2 text-sm text-gray-300">
               @for (skill of softSkills; track skill) {
-                <li>{{ skill }}</li>
+              <li>{{ skill }}</li>
               }
             </ul>
           </div>
