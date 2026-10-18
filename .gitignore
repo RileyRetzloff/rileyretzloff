@@ -43,3 +43,6 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Generated blog data (built by scripts/build-posts.mjs)
+src/app/blog/posts.generated.ts

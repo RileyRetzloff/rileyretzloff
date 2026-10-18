@@ -229,3 +229,26 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
+
+/* Blog post content, rendered from posts/*.md via [innerHTML] */
+.blog-post-body ul {
+  @apply my-4 list-disc space-y-2 pl-8;
+}
+.blog-post-body ol {
+  @apply my-4 list-decimal space-y-2 pl-8;
+}
+.blog-post-body blockquote {
+  @apply my-4 border-l-4 border-neutral-700 pl-4 text-neutral-300 italic;
+}
+.blog-post-body hr {
+  @apply my-8 border-neutral-800;
+}
+.blog-post-body img {
+  @apply my-6 max-w-full rounded-xl;
+}
+.blog-post-body pre {
+  @apply my-4 overflow-x-auto rounded-lg border border-neutral-800 bg-neutral-900/50 p-4;
+}
+.blog-post-body pre code {
+  @apply mt-0 mb-0 border-0 bg-transparent p-0;
+}

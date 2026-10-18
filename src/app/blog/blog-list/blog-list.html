@@ -1,0 +1,23 @@
+<main>
+  <h1>blog</h1>
+  <p>things i've been thinking about.</p>
+  <div class="py-5">
+    <hr />
+  </div>
+  @if (posts.length === 0) {
+    <p>nothing here yet. check back soon.</p>
+  } @else {
+    <ul class="space-y-6">
+      @for (post of posts; track post.slug) {
+        <li>
+          <a [routerLink]="['/blog', post.slug]" class="text-xl font-medium">
+            {{ post.title }}
+          </a>
+          @if (post.date) {
+            <p class="text-sm text-gray-400">{{ post.date | date: "mediumDate" }}</p>
+          }
+        </li>
+      }
+    </ul>
+  }
+</main>
