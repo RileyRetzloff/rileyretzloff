@@ -1,4 +1,19 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+// Minimal req/res shapes for the Vercel Node.js runtime, defined locally so
+// this function has zero external imports. (An `import type` from
+// "@vercel/node" was the prime suspect when the deployed function kept
+// crashing on invocation with FUNCTION_INVOCATION_FAILED while the identical
+// code ran fine locally — keep this file import-free.)
+interface FeedbackRequest {
+  method?: string;
+  headers: Record<string, string | string[] | undefined>;
+  body?: unknown;
+  socket?: { remoteAddress?: string } | null;
+}
+
+interface FeedbackResponse {
+  status(code: number): FeedbackResponse;
+  json(body: unknown): void;
+}
 
 const MAX_LENGTH = 5000;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -18,7 +33,7 @@ function isRateLimited(ip: string): boolean {
   return hits.length > RATE_LIMIT_MAX;
 }
 
-function clientIp(req: VercelRequest): string {
+function clientIp(req: FeedbackRequest): string {
   const forwarded = req.headers["x-forwarded-for"];
   if (typeof forwarded === "string") {
     return forwarded.split(",")[0]!.trim();
@@ -29,7 +44,10 @@ function clientIp(req: VercelRequest): string {
   return req.socket?.remoteAddress ?? "unknown";
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(
+  req: FeedbackRequest,
+  res: FeedbackResponse,
+) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "method not allowed" });
   }

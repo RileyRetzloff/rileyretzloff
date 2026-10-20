@@ -1,4 +1,5 @@
 import { Component, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 
 /**
  * POSTs one piece of anonymous feedback to the site's own API route, which
@@ -20,6 +21,7 @@ async function deliverFeedback(text: string, honeypot: string): Promise<void> {
 @Component({
   selector: "app-feedback",
   templateUrl: "./feedback.html",
+  imports: [FormsModule],
 })
 export class Feedback {
   protected readonly text = signal("");
