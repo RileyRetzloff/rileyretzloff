@@ -54,8 +54,13 @@ export class RecipesService {
       body:
         options.body !== undefined ? JSON.stringify(options.body) : undefined,
     });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
+    // A non-JSON response means the request never reached the API (e.g. the
+    // SPA fallback served index.html). Fail loudly instead of returning an
+    // empty object and leaving the page stuck on "loading…".
+    const data = await res.json().catch(() => {
+      throw new ApiError(`unexpected response from ${path} (${res.status})`);
+    });
+    if (!res.ok || !data || data.ok !== true) {
       const err = new ApiError(data.error || `request failed (${res.status})`);
       err.status = res.status;
       err.userId = data.userId;
