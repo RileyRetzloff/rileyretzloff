@@ -230,25 +230,32 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* Blog post content, rendered from posts/*.md via [innerHTML] */
-.blog-post-body ul {
+/* Rendered markdown content (blog posts and recipes), via [innerHTML] */
+.blog-post-body ul,
+.recipe-body ul {
   @apply my-4 list-disc space-y-2 pl-8;
 }
-.blog-post-body ol {
+.blog-post-body ol,
+.recipe-body ol {
   @apply my-4 list-decimal space-y-2 pl-8;
 }
-.blog-post-body blockquote {
+.blog-post-body blockquote,
+.recipe-body blockquote {
   @apply my-4 border-l-4 border-neutral-700 pl-4 text-neutral-300 italic;
 }
-.blog-post-body hr {
+.blog-post-body hr,
+.recipe-body hr {
   @apply my-8 border-neutral-800;
 }
-.blog-post-body img {
+.blog-post-body img,
+.recipe-body img {
   @apply my-6 max-w-full rounded-xl;
 }
-.blog-post-body pre {
+.blog-post-body pre,
+.recipe-body pre {
   @apply my-4 overflow-x-auto rounded-lg border border-neutral-800 bg-neutral-900/50 p-4;
 }
-.blog-post-body pre code {
+.blog-post-body pre code,
+.recipe-body pre code {
   @apply mt-0 mb-0 border-0 bg-transparent p-0;
 }

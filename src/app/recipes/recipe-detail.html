@@ -1,0 +1,22 @@
+<main>
+  <p class="mb-6">
+    <a routerLink="/recipes">← all recipes</a>
+  </p>
+  @if (recipe(); as r) {
+    <h1>{{ r.title }}</h1>
+    <p class="mb-8 text-sm text-gray-400">
+      @if (r.author) { by {{ r.author }} · }
+      @if (r.updated) { updated {{ r.updated | date: "mediumDate" }} }
+      @if (contributor()) {
+        · <a [routerLink]="['/recipes', r.slug, 'edit']">edit</a>
+      }
+    </p>
+    <article class="recipe-body" [innerHTML]="html(r)"></article>
+    <app-recipe-comments [slug]="r.slug" />
+  } @else if (notFound()) {
+    <h1>not found</h1>
+    <p>that recipe doesn't exist. <a routerLink="/recipes">back to recipes</a></p>
+  } @else {
+    <p>loading…</p>
+  }
+</main>

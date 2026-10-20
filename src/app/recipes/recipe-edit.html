@@ -1,0 +1,82 @@
+<main>
+  <p class="mb-6">
+    <a routerLink="/recipes">← all recipes</a>
+  </p>
+
+  @if (me() === null) {
+    <p>loading…</p>
+  } @else if (!me()!.signedIn) {
+    <h1>hold on</h1>
+    <p>you need to sign in to mess with recipes.</p>
+  } @else if (!me()!.contributor) {
+    <h1>not a contributor (yet)</h1>
+    <p>
+      you're signed in, but your account isn't on the contributor list. if
+      you're riley: add this user id to <code>RECIPE_CONTRIBUTORS</code> in
+      the vercel env vars —
+    </p>
+    <p class="py-3"><code>{{ me()!.userId }}</code></p>
+  } @else if (loadFailed()) {
+    <h1>not found</h1>
+    <p>that recipe doesn't exist.</p>
+  } @else {
+    <h1>{{ editingSlug() ? "edit recipe" : "new recipe" }}</h1>
+    <form (ngSubmit)="onSave()" class="mt-6 space-y-4">
+      <div>
+        <label for="recipe-title" class="mb-1 block text-sm text-gray-400">title</label>
+        <input
+          id="recipe-title"
+          type="text"
+          name="title"
+          class="form-input"
+          [ngModel]="title()"
+          (ngModelChange)="title.set($event)"
+        />
+      </div>
+      @if (!editingSlug()) {
+        <div>
+          <label for="recipe-author" class="mb-1 block text-sm text-gray-400">your name (shown as author)</label>
+          <input
+            id="recipe-author"
+            type="text"
+            name="author"
+            class="form-input"
+            [ngModel]="author()"
+            (ngModelChange)="author.set($event)"
+          />
+        </div>
+      }
+      <div>
+        <label for="recipe-body" class="mb-1 block text-sm text-gray-400">the recipe, in markdown</label>
+        <textarea
+          id="recipe-body"
+          name="body"
+          rows="18"
+          class="form-input font-mono"
+          placeholder="# ingredients&#10;- patience&#10;&#10;# steps&#10;1. cook the thing"
+          [ngModel]="body()"
+          (ngModelChange)="body.set($event)"
+        ></textarea>
+      </div>
+      @if (error()) {
+        <p class="text-sm text-red-400">{{ error() }}</p>
+      }
+      <div class="flex items-center justify-between">
+        @if (editingSlug()) {
+          <button type="button" class="btn btn-secondary" [disabled]="saving()" (click)="onDelete()">
+            delete
+          </button>
+        } @else {
+          <span></span>
+        }
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="title().trim().length === 0 || body().trim().length === 0 || saving()"
+        >
+          {{ saving() ? "saving…" : "save" }}
+        </button>
+      </div>
+    </form>
+  }
+</main>

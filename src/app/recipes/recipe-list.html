@@ -1,0 +1,33 @@
+<main>
+  <h1>recipes</h1>
+  <p>things worth cooking twice.</p>
+  <div class="py-5">
+    <hr />
+  </div>
+  @if (contributor()) {
+    <p class="mb-6">
+      <a routerLink="/recipes/new" class="btn btn-primary">new recipe</a>
+    </p>
+  }
+  @if (failed()) {
+    <p>couldn't load the recipes. try refreshing?</p>
+  } @else if (recipes() === null) {
+    <p>loading…</p>
+  } @else if (recipes()!.length === 0) {
+    <p>nothing here yet. check back soon.</p>
+  } @else {
+    <ul class="space-y-6">
+      @for (recipe of recipes(); track recipe.slug) {
+        <li>
+          <a [routerLink]="['/recipes', recipe.slug]" class="text-xl font-medium">
+            {{ recipe.title }}
+          </a>
+          <p class="text-sm text-gray-400">
+            @if (recipe.author) { by {{ recipe.author }} · }
+            @if (recipe.updated) { updated {{ recipe.updated | date: "mediumDate" }} }
+          </p>
+        </li>
+      }
+    </ul>
+  }
+</main>
