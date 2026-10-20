@@ -19,7 +19,7 @@ interface Job {
 })
 export class About {
   protected readonly banner =
-    'https://34ggzkze9s.ufs.sh/f/QUrPhpHwWNxUXSarqAf5NxjRVWc6L8Y4MQIFPTfUKtvy1uJi';
+    'https://34ggzkze9s.ufs.sh/f/QUrPhpHwWNxUlJfNGo7H4CpOwPGDWZrtI6ELnJixgNBQ0zyd';
 
   protected readonly proficiencies: Proficiency[] = [
     {
