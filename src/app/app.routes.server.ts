@@ -20,6 +20,10 @@ export const serverRoutes: ServerRoute[] = [
     getPrerenderParams: async () => POSTS.map((post) => ({ slug: post.slug })),
   },
   {
+    path: 'feedback',
+    renderMode: RenderMode.Prerender,
+  },
+  {
     path: '**',
     renderMode: RenderMode.Server,
   },

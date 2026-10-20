@@ -5,7 +5,10 @@
   <div class="py-5">
     <hr />
   </div>
-  <div class="flex justify-end pt-3">
+  <div class="flex justify-end gap-2.5 pt-3">
+    <button role="link" class="btn btn-secondary" [routerLink]="['/feedback']" aria-label="leave feedback">
+      {{ feedbackLabel }}
+    </button>
     <button role="link" class="btn btn-primary" [routerLink]="['/about']">
       who are you??
     </button>

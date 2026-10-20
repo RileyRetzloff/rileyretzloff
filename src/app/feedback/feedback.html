@@ -1,0 +1,40 @@
+<main>
+  <h1>say something (anonymous)</h1>
+  <p class="text-sm text-gray-400">
+    honest feedback is really important. it can be hard to come by sometimes. a
+    penny i have not, but a text box for your thoughts i do humbly offer.
+  </p>
+  <div class="py-5">
+    <hr />
+  </div>
+  <form (ngSubmit)="onSubmit()">
+    <input
+      type="text"
+      name="website"
+      tabindex="-1"
+      autocomplete="off"
+      aria-hidden="true"
+      class="hidden"
+      [value]="honeypot()"
+      (input)="onHoneypotInput($event)"
+    />
+    <textarea
+      id="feedback-box"
+      name="feedback"
+      rows="6"
+      class="form-input"
+      aria-label="your feedback"
+      [value]="text()"
+      (input)="onInput($event)"
+    ></textarea>
+    <div class="flex justify-end pt-3">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="text().trim().length === 0 || sending()"
+      >
+        {{ submitted() ? "thank you :)" : failed() ? "try again?" : "submit" }}
+      </button>
+    </div>
+  </form>
+</main>
