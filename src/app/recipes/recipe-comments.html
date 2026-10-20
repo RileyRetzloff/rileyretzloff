@@ -1,0 +1,70 @@
+<section class="mt-12">
+  <h2 class="text-lg font-medium">conversation</h2>
+  <div class="py-4">
+    <hr />
+  </div>
+
+  @if (comments() === null) {
+    <p>loading…</p>
+  } @else if (comments()!.length === 0) {
+    <p class="text-gray-400">no comments yet. say something nice.</p>
+  } @else {
+    <ul class="space-y-5">
+      @for (comment of comments(); track comment.id) {
+        <li>
+          <p class="text-sm text-gray-400">
+            <span class="text-gray-200">{{ comment.name }}</span>
+            · {{ comment.createdAt | date: "medium" }}
+          </p>
+          <p class="whitespace-pre-wrap">{{ comment.text }}</p>
+        </li>
+      }
+    </ul>
+  }
+
+  <form (ngSubmit)="onSubmit()" class="mt-8 space-y-3">
+    <input
+      type="text"
+      name="website"
+      tabindex="-1"
+      autocomplete="off"
+      aria-hidden="true"
+      class="hidden"
+      [ngModel]="honeypot()"
+      (ngModelChange)="honeypot.set($event)"
+    />
+    <div>
+      <input
+        type="text"
+        name="name"
+        placeholder="your name (optional)"
+        class="form-input"
+        [ngModel]="name()"
+        (ngModelChange)="name.set($event)"
+      />
+    </div>
+    <div>
+      <textarea
+        name="comment"
+        rows="3"
+        placeholder="made this? tweaked it? tell us."
+        aria-label="your comment"
+        class="form-input"
+        [ngModel]="text()"
+        (ngModelChange)="text.set($event)"
+      ></textarea>
+    </div>
+    <div class="flex items-center justify-end gap-3">
+      @if (failed()) {
+        <p class="text-sm text-gray-400">that didn't go through.</p>
+      }
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="text().trim().length === 0 || sending()"
+      >
+        comment
+      </button>
+    </div>
+  </form>
+</section>

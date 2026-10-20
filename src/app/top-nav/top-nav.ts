@@ -1,5 +1,11 @@
 import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import {
+  ClerkSignInButtonDirective,
+  ClerkSignedInDirective,
+  ClerkSignedOutDirective,
+  ClerkUserButtonComponent,
+} from "ngx-clerk";
 
 // The middle one is literally U+FFFD, per Riley. Yes, really.
 const FEEDBACK_LINK_LABELS = ["⍰", "�", "⸮"];
@@ -13,7 +19,13 @@ function pickLabel(): string {
 
 @Component({
   selector: "app-top-nav",
-  imports: [RouterLink],
+  imports: [
+    RouterLink,
+    ClerkUserButtonComponent,
+    ClerkSignedInDirective,
+    ClerkSignedOutDirective,
+    ClerkSignInButtonDirective,
+  ],
   templateUrl: "./top-nav.html",
 })
 export class TopNav {

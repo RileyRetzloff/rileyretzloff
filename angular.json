@@ -18,10 +18,6 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "server": "src/main.server.ts",
-            "ssr": {
-              "entry": "src/server.ts"
-            },
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -30,7 +26,6 @@
               }
             ],
             "styles": ["src/styles.css"],
-            "outputMode": "static",
             "security": {
               "allowedHosts": []
             }
