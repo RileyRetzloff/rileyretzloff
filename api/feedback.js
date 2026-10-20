@@ -1,19 +1,14 @@
-// Minimal req/res shapes for the Vercel Node.js runtime, defined locally so
-// this function has zero external imports. (An `import type` from
-// "@vercel/node" was the prime suspect when the deployed function kept
-// crashing on invocation with FUNCTION_INVOCATION_FAILED while the identical
-// code ran fine locally — keep this file import-free.)
-interface FeedbackRequest {
-  method?: string;
-  headers: Record<string, string | string[] | undefined>;
-  body?: unknown;
-  socket?: { remoteAddress?: string } | null;
-}
-
-interface FeedbackResponse {
-  status(code: number): FeedbackResponse;
-  json(body: unknown): void;
-}
+// Anonymous feedback endpoint for rileyretzloff.xyz.
+//
+// Plain JavaScript on purpose: Vercel runs .js API functions directly with
+// no compilation step, which removes the whole TypeScript build pipeline as
+// a variable (the .ts version of this function kept crashing on invocation
+// with FUNCTION_INVOCATION_FAILED while running fine locally).
+//
+// Saves each submission as a GitHub issue in a private repo. Needs two
+// Vercel env vars: GITHUB_PSST_ISSUES_READWRITE_TOKEN (fine-grained PAT,
+// Issues read/write on the feedback repo only) and GITHUB_PSST_ISSUES_REPO
+// ("owner/repo", e.g. RileyRetzloff/psst).
 
 const MAX_LENGTH = 5000;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -21,9 +16,9 @@ const RATE_LIMIT_MAX = 5;
 
 // Best-effort in-memory rate limiting. Resets on cold start, which is fine:
 // this is a backstop for floods, not a security boundary.
-const hitsByIp = new Map<string, number[]>();
+const hitsByIp = new Map();
 
-function isRateLimited(ip: string): boolean {
+function isRateLimited(ip) {
   const now = Date.now();
   const hits = (hitsByIp.get(ip) ?? []).filter(
     (t) => now - t < RATE_LIMIT_WINDOW_MS,
@@ -33,31 +28,28 @@ function isRateLimited(ip: string): boolean {
   return hits.length > RATE_LIMIT_MAX;
 }
 
-function clientIp(req: FeedbackRequest): string {
+function clientIp(req) {
   const forwarded = req.headers["x-forwarded-for"];
   if (typeof forwarded === "string") {
-    return forwarded.split(",")[0]!.trim();
+    return forwarded.split(",")[0].trim();
   }
   if (Array.isArray(forwarded) && forwarded.length > 0) {
-    return forwarded[0]!.trim();
+    return forwarded[0].trim();
   }
-  return req.socket?.remoteAddress ?? "unknown";
+  return (req.socket && req.socket.remoteAddress) || "unknown";
 }
 
-export default async function handler(
-  req: FeedbackRequest,
-  res: FeedbackResponse,
-) {
+module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "method not allowed" });
   }
 
-  const body = (req.body ?? {}) as Record<string, unknown>;
+  const body = req.body ?? {};
   const text = typeof body.text === "string" ? body.text.trim() : "";
   const honeypot = typeof body.website === "string" ? body.website : "";
 
-  // Honeypot: pretend everything is fine so bots never learn they were caught.
-  // No issue is created.
+  // Honeypot: pretend everything is fine so bots never learn they were
+  // caught. No issue is created.
   if (honeypot.trim().length > 0) {
     return res.status(200).json({ ok: true });
   }
