@@ -46,3 +46,10 @@ Thumbs.db
 
 # Generated blog data (built by scripts/build-posts.mjs)
 src/app/blog/posts.generated.ts
+
+# Local environment values (real secrets live in the Vercel dashboard;
+# .env.example is the committed template)
+.env
+.env.*
+!.env.example
+.vercel
