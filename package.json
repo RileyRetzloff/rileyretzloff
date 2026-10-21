@@ -6,7 +6,6 @@
     "prebuild": "node scripts/build-posts.mjs",
     "prestart": "node scripts/build-posts.mjs",
     "start": "ng serve",
-    "dev": "vercel dev",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

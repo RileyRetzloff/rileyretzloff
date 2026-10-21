@@ -5,7 +5,7 @@ Two ways to run the site locally:
 | Command | What you get |
 | --- | --- |
 | `npm start` | Frontend only (Angular dev server). Blog, about, and page shells work. Anything that calls `/api/*` — recipes, comments, feedback submit — does not. |
-| `npm run dev` | Full stack via `vercel dev`: the Angular app **and** the `/api` functions, wired exactly like production. Use this for recipes/feedback work. |
+| `vercel dev` | Full stack: the Angular app **and** the `/api` functions, wired exactly like production. Use this for recipes/feedback work. (Run it directly — do NOT wrap it in an npm script named `dev`; the CLI invokes the project's dev script itself and recurses.) |
 
 ## One-time setup for `vercel dev`
 
