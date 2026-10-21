@@ -1,25 +1,45 @@
 # Local development
 
-Two ways to run the site locally:
+Running the full site locally takes two processes:
 
-| Command | What you get |
-| --- | --- |
-| `npm start` | Frontend only (Angular dev server). Blog, about, and page shells work. Anything that calls `/api/*` — recipes, comments, feedback submit — does not. |
-| `vercel dev` | Full stack: the Angular app **and** the `/api` functions, wired exactly like production. Use this for recipes/feedback work. (Run it directly — do NOT wrap it in an npm script named `dev`; the CLI invokes the project's dev script itself and recurses.) |
+```sh
+npm run api    # terminal 1: the /api functions, on http://localhost:3001
+npm start      # terminal 2: ng serve, on http://localhost:4200
+```
 
-## One-time setup for `vercel dev`
+`ng serve` proxies `/api/*` to the API server (see
+`src/proxy.conf.json`), so the app behaves exactly like production.
+Frontend-only work (blog, styling) doesn't need the API server — just
+`npm start`. If the API server isn't running, `/api` calls fail loudly
+in the console instead of silently loading nothing.
 
-1. Install the Vercel CLI: `npm i -g vercel`
-2. From the repo root: `vercel link` (sign in, pick the existing project)
-3. In the Vercel dashboard → Project → Settings → Environment Variables,
-   add a **Development**-scoped value for every variable in
-   [`.env.example`](.env.example). `vercel dev` injects the Development
-   set automatically; no local `.env` file is needed.
-   - `CLERK_PUBLISHABLE_KEY` under Development must be the **pk_test**
-     key — it has to match the instance the local frontend signs into.
-   - `RECIPE_CONTRIBUTORS` under Development needs your **development
-     instance** Clerk user ID (user IDs differ per instance; the
-     `/recipes/new` page shows yours when you're not on the list).
+Do **not** use `vercel dev` for this project: it runs `ng serve`
+behind the Vercel proxy, and Angular's Vite-based dev server breaks
+under it (`vite:import-analysis` errors on the generated index.html).
+The API server (`scripts/dev-api.mjs`) mounts the exact same
+`api/*.js` handlers Vercel runs in production, with zero dependencies.
+
+## One-time setup: env values
+
+The API functions read their configuration from environment variables
+(full list in [`.env.example`](.env.example)). Locally they come from
+a `.env.local` file in the repo root, which is gitignored. Two ways to
+create it:
+
+- **From Vercel** (if you have the CLI): `vercel link` once, then
+  `vercel env pull .env.local` — fetches the Development-scope values
+  from the dashboard (Project → Settings → Environment Variables).
+- **By hand**: `cp .env.example .env.local` and fill in the values.
+
+Either way, the local set must pair with the **development** Clerk
+instance:
+
+- `CLERK_PUBLISHABLE_KEY` = the **pk_test** key — it has to match the
+  instance the local frontend signs into (see below), or token checks
+  fail.
+- `RECIPE_CONTRIBUTORS` = your **development instance** Clerk user ID
+  (user IDs differ per instance; the `/recipes/new` page shows yours
+  when you're signed in but not on the list).
 
 ## How the Clerk keys are wired
 
@@ -31,13 +51,13 @@ Two ways to run the site locally:
   is what `ng serve` uses.
 - The `/api` functions don't read either file — they read the
   `CLERK_PUBLISHABLE_KEY` env var and verify tokens against that
-  instance's JWKS. That's why each Vercel scope's value has to match
-  the frontend key used in the same context.
+  instance's JWKS. That's why each context's env value has to match
+  the frontend key used alongside it.
 
 ## Notes
 
-- Local recipe writes go to whatever repo the Development scope's
-  `GITHUB_RECIPES_REPO` names. Point it at a throwaway repo if you
-  don't want test recipes on the live site.
+- Local recipe writes go to whatever repo `GITHUB_RECIPES_REPO` names
+  in your `.env.local`. Point it at a throwaway repo if you don't want
+  test recipes on the live site.
 - The Clerk **secret** key is never used anywhere in this project —
   frontend or backend.
