@@ -9,7 +9,7 @@ import { provideRouter, withComponentInputBinding } from "@angular/router";
 import { CLERK_OPTIONS, ClerkService, type ClerkInitOptions } from "ngx-clerk";
 import { routes } from "./app.routes";
 import { clerkTokenInterceptor } from "./auth/clerk-token.interceptor";
-import { environment } from "../environments/environment";
+import { environment } from "../environments/environment.generated";
 
 const clerkOptions: ClerkInitOptions = {
   publishableKey: environment.clerkPublishableKey,

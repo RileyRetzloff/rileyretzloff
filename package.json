@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "posts": "node scripts/build-posts.mjs",
-    "prestart": "npm run posts",
+    "generate": "node scripts/build-posts.mjs && node scripts/build-env.mjs",
+    "prestart": "npm run generate",
     "start": "ng serve",
     "api": "node --env-file-if-exists=.env.local --watch scripts/dev-api.mjs",
-    "prebuild": "npm run posts",
+    "prebuild": "npm run generate",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "pretest": "npm run posts",
+    "pretest": "npm run generate",
     "test": "ng test",
     "lint": "ng lint"
   },

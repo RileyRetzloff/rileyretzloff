@@ -19,6 +19,12 @@ test suite (`src/app/app.spec.ts` is the stale CLI default).
   `.form-input`, `.markdown`, ...) live in `src/styles.css`.
 - `posts/*.md`: blog posts. `scripts/build-posts.mjs` renders them into
   `src/app/blog/posts.generated.ts` (gitignored) before start/build/test.
+- `scripts/build-env.mjs` writes `src/environments/environment.generated.ts`
+  (gitignored) from `CLERK_PUBLISHABLE_KEY`, at the same points. That one
+  env var picks the Clerk instance for frontend and API alike: `pk_test` for
+  local and Vercel Preview, `pk_live` only for Production (the production
+  instance only works on rileyretzloff.xyz; on `*.vercel.app` clerk-js
+  tries to proxy through `/__clerk` and gets 405s).
 - `api/`: Vercel functions, plain CommonJS `.js` (no build step, on purpose).
   `api/_lib/` holds shared code (Vercel doesn't route `_`-prefixed paths):
   - `http.js`: `route({ GET, POST, ... })` wraps every handler. Throw
