@@ -18,23 +18,10 @@ export const routes: Routes = [
   { path: "blog/:slug", component: BlogPost },
   { path: "feedback", component: Feedback },
   { path: "recipes", component: RecipeList },
-  // "new" must come before ":slug" or it would be treated as a slug.
-  // Contributor status is enforced by the API; the guard just requires
-  // being signed in.
-  {
-    path: "recipes/new",
-    component: RecipeEdit,
-    canActivate: [canActivateClerk],
-  },
+  { path: "recipes/new", component: RecipeEdit, canActivate: [canActivateClerk] },
   { path: "recipes/:slug", component: RecipeDetail },
-  {
-    path: "recipes/:slug/edit",
-    component: RecipeEdit,
-    canActivate: [canActivateClerk],
-  },
-  // Clerk's components drive multi-step flows under these paths
-  // (/sign-in/factor-one, /sign-up/verify-email-address, ...), so they
-  // need catch-all matchers rather than plain paths.
+  { path: "recipes/:slug/edit", component: RecipeEdit, canActivate: [canActivateClerk] },
+  // Clerk's multi-step flows live under these (/sign-in/factor-one, ...).
   { matcher: catchAllRoute("sign-in"), component: SignInPage },
   { matcher: catchAllRoute("sign-up"), component: SignUpPage },
   { path: "**", redirectTo: "" },

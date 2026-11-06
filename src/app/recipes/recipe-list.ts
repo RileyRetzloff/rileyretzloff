@@ -1,7 +1,9 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { DatePipe } from "@angular/common";
+import { httpResource } from "@angular/common/http";
 import { RouterLink } from "@angular/router";
-import { RecipesService, type RecipeSummary } from "./recipes.service";
+import { Session } from "../auth/session";
+import { type RecipeSummary } from "./recipes";
 
 @Component({
   selector: "app-recipe-list",
@@ -9,26 +11,6 @@ import { RecipesService, type RecipeSummary } from "./recipes.service";
   templateUrl: "./recipe-list.html",
 })
 export class RecipeList {
-  private readonly service = inject(RecipesService);
-
-  protected readonly recipes = signal<RecipeSummary[] | null>(null);
-  protected readonly contributor = signal(false);
-  protected readonly failed = signal(false);
-
-  constructor() {
-    void this.load();
-  }
-
-  private async load(): Promise<void> {
-    try {
-      this.recipes.set(await this.service.list());
-    } catch {
-      this.failed.set(true);
-    }
-    try {
-      this.contributor.set((await this.service.me()).contributor);
-    } catch {
-      // Signed-out visitors just don't see contributor controls.
-    }
-  }
+  protected readonly recipes = httpResource<RecipeSummary[]>(() => "/api/recipes");
+  protected readonly contributor = inject(Session).contributor;
 }

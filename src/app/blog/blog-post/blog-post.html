@@ -7,7 +7,7 @@
     @if (p.date) {
       <p class="mb-8 text-sm text-gray-400">{{ p.date | date: "mediumDate" }}</p>
     }
-    <article class="blog-post-body" [innerHTML]="trustedHtml(p.html)"></article>
+    <article class="markdown" [innerHTML]="html()"></article>
   } @else {
     <h1>not found</h1>
     <p>that post doesn't exist. <a routerLink="/blog">back to the blog</a></p>

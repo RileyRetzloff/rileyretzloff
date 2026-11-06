@@ -9,24 +9,24 @@
       <a routerLink="/recipes/new" class="btn btn-primary">new recipe</a>
     </p>
   }
-  @if (failed()) {
+  @if (recipes.error()) {
     <p>couldn't load the recipes. try refreshing?</p>
-  } @else if (recipes() === null) {
+  } @else if (!recipes.hasValue()) {
     <p>loading…</p>
-  } @else if (recipes()!.length === 0) {
-    <p>nothing here yet. check back soon.</p>
   } @else {
     <ul class="space-y-6">
-      @for (recipe of recipes(); track recipe.slug) {
+      @for (recipe of recipes.value(); track recipe.slug) {
         <li>
           <a [routerLink]="['/recipes', recipe.slug]" class="text-xl font-medium">
             {{ recipe.title }}
           </a>
           <p class="text-sm text-gray-400">
             @if (recipe.author) { by {{ recipe.author }} · }
-            @if (recipe.updated) { updated {{ recipe.updated | date: "mediumDate" }} }
+            updated {{ recipe.updated | date: "mediumDate" }}
           </p>
         </li>
+      } @empty {
+        <li>nothing here yet. check back soon.</li>
       }
     </ul>
   }
