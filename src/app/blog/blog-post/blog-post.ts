@@ -1,9 +1,7 @@
-import { Component, inject } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { Component, computed, inject, input } from "@angular/core";
 import { DatePipe } from "@angular/common";
-import { ActivatedRoute, RouterLink } from "@angular/router";
-import { DomSanitizer, type SafeHtml } from "@angular/platform-browser";
-import { map } from "rxjs";
+import { DomSanitizer } from "@angular/platform-browser";
+import { RouterLink } from "@angular/router";
 import { POSTS } from "../posts.generated";
 
 @Component({
@@ -12,17 +10,13 @@ import { POSTS } from "../posts.generated";
   templateUrl: "./blog-post.html",
 })
 export class BlogPost {
-  private readonly route = inject(ActivatedRoute);
   private readonly sanitizer = inject(DomSanitizer);
 
-  private readonly slug = toSignal(
-    this.route.paramMap.pipe(map((params) => params.get("slug"))),
+  /** Route param. */
+  readonly slug = input.required<string>();
+
+  protected readonly post = computed(() => POSTS.find((post) => post.slug === this.slug()));
+  protected readonly html = computed(() =>
+    this.sanitizer.bypassSecurityTrustHtml(this.post()?.html ?? ""),
   );
-
-  protected readonly post = () => POSTS.find((p) => p.slug === this.slug());
-
-  /** The HTML comes from the author's own markdown files in posts/ — trusted. */
-  protected trustedHtml(html: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
-  }
 }

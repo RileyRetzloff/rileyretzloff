@@ -6,16 +6,7 @@ import {
   ClerkSignedOutDirective,
   ClerkUserButtonComponent,
 } from "ngx-clerk";
-
-// The middle one is literally U+FFFD, per Riley. Yes, really.
-const FEEDBACK_LINK_LABELS = ["⍰", "�", "⸮"];
-
-function pickLabel(): string {
-  // Non-empty by construction, so the index always hits.
-  return FEEDBACK_LINK_LABELS[
-    Math.floor(Math.random() * FEEDBACK_LINK_LABELS.length)
-  ]!;
-}
+import { pickRandom } from "../random";
 
 @Component({
   selector: "app-top-nav",
@@ -29,5 +20,6 @@ function pickLabel(): string {
   templateUrl: "./top-nav.html",
 })
 export class TopNav {
-  protected readonly feedbackLabel = pickLabel();
+  // The middle one is U+FFFD (the replacement character), on purpose.
+  protected readonly feedbackLabel = pickRandom(["⍰", "�", "⸮"]);
 }

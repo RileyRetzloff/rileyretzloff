@@ -1,68 +1,32 @@
-import { Component, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
+import { firstValueFrom } from "rxjs";
 
-/**
- * POSTs one piece of anonymous feedback to the site's own API route, which
- * saves it as a GitHub issue in Riley's private feedback repo (and GitHub
- * emails him about it). Needs two Vercel env vars to be set:
- * GITHUB_PSST_ISSUES_READWRITE_TOKEN and GITHUB_PSST_ISSUES_REPO.
- */
-async function deliverFeedback(text: string, honeypot: string): Promise<void> {
-  const res = await fetch("/api/feedback", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, website: honeypot }),
-  });
-  if (!res.ok) {
-    throw new Error(`feedback delivery failed (${res.status})`);
-  }
-}
-
+/** Anonymous feedback, which api/feedback.js files as a GitHub issue. */
 @Component({
   selector: "app-feedback",
-  templateUrl: "./feedback.html",
   imports: [FormsModule],
+  templateUrl: "./feedback.html",
 })
 export class Feedback {
+  private readonly http = inject(HttpClient);
+
   protected readonly text = signal("");
-  // Honeypot: invisible to humans, irresistible to bots. Never rendered
-  // visibly; the server silently drops submissions that fill it.
   protected readonly honeypot = signal("");
-  protected readonly sending = signal(false);
-  protected readonly submitted = signal(false);
-  protected readonly failed = signal(false);
+  protected readonly status = signal<"idle" | "sending" | "sent" | "failed">("idle");
 
-  protected onInput(event: Event): void {
-    this.text.set((event.target as HTMLTextAreaElement).value);
-    if (this.submitted()) {
-      this.submitted.set(false);
-    }
-    if (this.failed()) {
-      this.failed.set(false);
-    }
-  }
-
-  protected onHoneypotInput(event: Event): void {
-    this.honeypot.set((event.target as HTMLInputElement).value);
-  }
-
-  protected async onSubmit(): Promise<void> {
-    const value = this.text().trim();
-    if (value.length === 0 || this.sending()) {
-      return;
-    }
-    this.sending.set(true);
-    this.failed.set(false);
+  protected async submit(): Promise<void> {
+    this.status.set("sending");
     try {
-      await deliverFeedback(value, this.honeypot());
+      await firstValueFrom(
+        this.http.post("/api/feedback", { text: this.text().trim(), website: this.honeypot() }),
+      );
+      this.text.set("");
+      this.status.set("sent");
     } catch {
-      // Leave the text in place so nothing is lost; the button invites retry.
-      this.failed.set(true);
-      return;
-    } finally {
-      this.sending.set(false);
+      // Keep the text so nothing is lost; the button invites a retry.
+      this.status.set("failed");
     }
-    this.text.set("");
-    this.submitted.set(true);
   }
 }

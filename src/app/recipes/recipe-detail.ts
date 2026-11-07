@@ -1,11 +1,11 @@
-import { Component, effect, inject, signal } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { Component, computed, inject, input } from "@angular/core";
 import { DatePipe } from "@angular/common";
-import { ActivatedRoute, RouterLink } from "@angular/router";
-import { map } from "rxjs";
+import { httpResource } from "@angular/common/http";
+import { RouterLink } from "@angular/router";
 import { marked } from "marked";
-import { RecipesService, type Recipe } from "./recipes.service";
+import { Session } from "../auth/session";
 import { RecipeComments } from "./recipe-comments";
+import { type Recipe } from "./recipes";
 
 @Component({
   selector: "app-recipe-detail",
@@ -13,44 +13,14 @@ import { RecipeComments } from "./recipe-comments";
   templateUrl: "./recipe-detail.html",
 })
 export class RecipeDetail {
-  private readonly route = inject(ActivatedRoute);
-  private readonly service = inject(RecipesService);
+  /** Route param. */
+  readonly slug = input.required<string>();
 
-  private readonly slug = toSignal(
-    this.route.paramMap.pipe(map((params) => params.get("slug"))),
+  protected readonly recipe = httpResource<Recipe>(() => `/api/recipes/${this.slug()}`);
+  protected readonly contributor = inject(Session).contributor;
+
+  /** Recipes are user-written, so unlike blog posts this HTML stays sanitized. */
+  protected readonly html = computed(() =>
+    this.recipe.hasValue() ? marked.parse(this.recipe.value().body, { async: false }) : "",
   );
-
-  protected readonly recipe = signal<Recipe | null>(null);
-  protected readonly notFound = signal(false);
-  protected readonly contributor = signal(false);
-
-  constructor() {
-    effect(() => {
-      const slug = this.slug();
-      if (slug) void this.load(slug);
-    });
-    void this.checkContributor();
-  }
-
-  private async checkContributor(): Promise<void> {
-    try {
-      this.contributor.set((await this.service.me()).contributor);
-    } catch {
-      // Signed-out visitors just don't see the edit link.
-    }
-  }
-
-  private async load(slug: string): Promise<void> {
-    try {
-      this.recipe.set(await this.service.get(slug));
-    } catch {
-      this.notFound.set(true);
-    }
-  }
-
-  /** Markdown → HTML. Angular sanitizes [innerHTML] — no bypass here. */
-  protected html(recipe: Recipe): string {
-    const out = marked.parse(recipe.body);
-    return typeof out === "string" ? out : "";
-  }
 }

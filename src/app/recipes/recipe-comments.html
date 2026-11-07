@@ -4,13 +4,13 @@
     <hr />
   </div>
 
-  @if (comments() === null) {
+  @if (comments.error()) {
+    <p class="text-gray-400">couldn't load the comments.</p>
+  } @else if (comments.isLoading()) {
     <p>loading…</p>
-  } @else if (comments()!.length === 0) {
-    <p class="text-gray-400">no comments yet. say something nice.</p>
   } @else {
     <ul class="space-y-5">
-      @for (comment of comments(); track comment.id) {
+      @for (comment of comments.value(); track comment.id) {
         <li>
           <p class="text-sm text-gray-400">
             <span class="text-gray-200">{{ comment.name }}</span>
@@ -18,11 +18,14 @@
           </p>
           <p class="whitespace-pre-wrap">{{ comment.text }}</p>
         </li>
+      } @empty {
+        <li class="text-gray-400">no comments yet. say something nice.</li>
       }
     </ul>
   }
 
-  <form (ngSubmit)="onSubmit()" class="mt-8 space-y-3">
+  <form (ngSubmit)="submit()" class="mt-8 space-y-3">
+    <!-- Honeypot: hidden from humans; the API drops anything that fills it. -->
     <input
       type="text"
       name="website"
@@ -30,30 +33,24 @@
       autocomplete="off"
       aria-hidden="true"
       class="hidden"
-      [ngModel]="honeypot()"
-      (ngModelChange)="honeypot.set($event)"
+      [(ngModel)]="honeypot"
     />
-    <div>
-      <input
-        type="text"
-        name="name"
-        placeholder="your name (optional)"
-        class="form-input"
-        [ngModel]="name()"
-        (ngModelChange)="name.set($event)"
-      />
-    </div>
-    <div>
-      <textarea
-        name="comment"
-        rows="3"
-        placeholder="made this? tweaked it? tell us."
-        aria-label="your comment"
-        class="form-input"
-        [ngModel]="text()"
-        (ngModelChange)="text.set($event)"
-      ></textarea>
-    </div>
+    <input
+      type="text"
+      name="name"
+      placeholder="your name (optional)"
+      aria-label="your name"
+      class="form-input"
+      [(ngModel)]="name"
+    />
+    <textarea
+      name="comment"
+      rows="3"
+      placeholder="made this? tweaked it? tell us."
+      aria-label="your comment"
+      class="form-input"
+      [(ngModel)]="text"
+    ></textarea>
     <div class="flex items-center justify-end gap-3">
       @if (failed()) {
         <p class="text-sm text-gray-400">that didn't go through.</p>

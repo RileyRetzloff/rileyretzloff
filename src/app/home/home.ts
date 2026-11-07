@@ -1,14 +1,6 @@
 import { Component } from '@angular/core';
 import {RouterLink} from '@angular/router';
-
-const FEEDBACK_BUTTON_LABELS = ['psst', 'a word?'];
-
-function pickLabel(): string {
-  // Non-empty by construction, so the index always hits.
-  return FEEDBACK_BUTTON_LABELS[
-    Math.floor(Math.random() * FEEDBACK_BUTTON_LABELS.length)
-  ]!;
-}
+import { pickRandom } from '../random';
 
 @Component({
   selector: 'app-home',
@@ -18,5 +10,5 @@ function pickLabel(): string {
   ]
 })
 export class Home {
-  protected readonly feedbackLabel = pickLabel();
+  protected readonly feedbackLabel = pickRandom(['psst', 'a word?']);
 }
